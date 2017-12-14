@@ -1,0 +1,70 @@
+body{
+    background-color: black;
+    font-family: 'Yellowtail', cursive;
+    color: #ff69b4;
+    text-shadow: 0px 5px 10px #0FF;
+    text-align: center;
+}
+#game {
+    border: 3px solid #ff69b4;
+    box-shadow: 0px 5px 30px #0FF;
+    box-sizing: border-box;
+    width: 700px;
+    margin: 0 auto;
+    border-radius: 50px;
+    padding-top: 10px;
+}
+
+#flex {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+#tableau {
+    border-bottom: 3px solid #ff69b4;
+    margin: 60px 20px;
+    box-shadow: 0 3px 2px -2px #0FF;
+    padding: 20px 0;
+    height: 200px;
+}
+
+.cards {
+    width:64px;
+    height: 89px;
+    border:2px solid #ff69b4;
+    display: inline-block;
+    background-color: #0FF;
+    border-radius: 15px;  
+}
+#waste div:last-child {
+    box-shadow: 0px 10px 10px #ff69b4;
+}
+
+#stock div{
+    box-shadow: 5px 10px 0px #ff69b4;
+}
+
+span {
+    padding: 0 10px;
+    border-radius: 15px;
+    border-right: 5px solid  #ff69b4;
+    border-left: 5px solid #ff69b4;
+} 
+
+.cards div {
+    width:64px;
+    height: 89px;
+    border:2px solid #ff69b4;
+    display: block;
+    background-color: #0FF;
+    border-radius: 15px;
+    margin-top: -80px;
+}
+
+#tableau>div {
+    border: none;
+    background-color: transparent;
+    margin: 5px;
+}

@@ -1,0 +1,13 @@
+﻿Hank hill is the king
+Peggy is queen
+Bobby is jack
+
+
+1) create deck:
+for each within a for each, 1st: is based on suit, 2nd is based on rank
+the deck is an array of objects
+
+2) 4 arrays:
+set conditions such that only immediately higher ranks and aces.
+
+3 
