@@ -15,18 +15,19 @@ var stockEl = document.getElementById("stock");
 /*----- functions -----*/
 
 function init() {
-    tableau = [[],[],[],[],[],[],[]];
-    foundation = [[],[],[],[]];
     deck = [];
+    activeCard =[];
     stock = [];
     waste = [];
+    tableau = [[],[],[],[],[],[],[]];
+    foundation = [[],[],[],[]];
     makeDeck();
     shuffleDeck();
     makeTableau();   
 }
 
 function render(){
-    //update arrays
+    //update dom from arrays
     //one div for each item in array
     chkWin();
 }
@@ -71,15 +72,25 @@ function makeTableau() {
 
 function addFoundation(e) {
     var fTarget = foundation[e.target.id.charAt(1)];
-    var isSuit = ((fTarget.lastChild.suit === activeCard.suit) || (fTarget.length === 0));
+    var isSuit = ((fTarget[fTarget.length-1].suit === activeCard.suit) || (fTarget.length === 0));
     var isRank = fTarget.length === activeCard.rank;
     if  (isRank && isSuit) {
-        fTarget.lastChild.isActive = false;
+        fTarget[fTarget.length-1].isActive = false;
         fTarget.push(activeCard.pop());
     }
     render();    
 }
 
+function addTableau(e) {
+    var tTarget = tableau[e.target.id.charAt(1)];
+    var rankChk = activecard.rank+1 === tTarget[tTarget.length-1].rank;
+    var suitChk = suits.indexOf(activeCard.suit)%2 !== suits.indexOf(tTarget[tTarget.length-1].suit)%2;
+    if((activeCard.rank === 13 && tTarget.length === 0) || (rankChk && suitChk)){
+    tTarget[tTarget.length-1].isActive = false;
+    tTarget.push(activeCards.pop());
+    }
+
+}
 
 /*
 function selectCard(e){
@@ -90,16 +101,11 @@ function selectCard(e){
     if (activeCard.length === 0 && tCard.isActive === true) {
         activeCard.push(tCard) 
 }
-
-
-
 */
 function chkWin(){
-    if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) return 'winner winner chicken dinner';
+    if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) {return 'winner winner chicken dinner';
+} else {return 'you lose';}
 }
-
-
-
 
 init();
 render();
