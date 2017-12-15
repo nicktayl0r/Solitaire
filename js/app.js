@@ -10,7 +10,8 @@ var foundationEl = document.getElementById("foundation");
 var wasteEl = document.getElementById("waste");
 var stockEl = document.getElementById("stock");
 /*----- event listeners -----*/
-//restart button just inits 
+//restart button just inits
+//onclick for cards set to active card, pop from array
 /*----- functions -----*/
 
 function init() {
@@ -26,8 +27,8 @@ function init() {
 
 function render(){
     //update arrays
-    // one div for each item in array
-    //check the win conditions
+    //one div for each item in array
+    chkWin();
 }
 
 class Card {
@@ -67,6 +68,38 @@ function makeTableau() {
         lastCard.isVisible = true;
     }
 }
+
+function addFoundation(e) {
+    var fTarget = foundation[e.target.id.charAt(1)];
+    var isSuit = ((fTarget.lastChild.suit === activeCard.suit) || (fTarget.length === 0));
+    var isRank = fTarget.length === activeCard.rank;
+    if  (isRank && isSuit) {
+        fTarget.lastChild.isActive = false;
+        fTarget.push(activeCard.pop());
+    }
+    render();    
+}
+
+
+/*
+function selectCard(e){
+    e.target.ParentNode.id.charAt(1)
+    var tCard = tableau[][tableau[].length-1];
+    //which array is it in
+    // how do i acquire the  in the tableau array 
+    if (activeCard.length === 0 && tCard.isActive === true) {
+        activeCard.push(tCard) 
+}
+
+
+
+*/
+function chkWin(){
+    if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) return 'winner winner chicken dinner';
+}
+
+
+
 
 init();
 render();
