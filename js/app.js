@@ -29,6 +29,7 @@ function init() {
 function render(){
     //update dom from arrays
     //one div for each item in array
+    //set the active and the visiblility based on the dom;
     chkWin();
 }
 
@@ -86,12 +87,16 @@ function addTableau(e) {
     var rankChk = activecard.rank+1 === tTarget[tTarget.length-1].rank;
     var suitChk = suits.indexOf(activeCard.suit)%2 !== suits.indexOf(tTarget[tTarget.length-1].suit)%2;
     if((activeCard.rank === 13 && tTarget.length === 0) || (rankChk && suitChk)){
-    tTarget[tTarget.length-1].isActive = false;
-    tTarget.push(activeCards.pop());
+        tTarget[tTarget.length-1].isActive = false;
+        tTarget.push(activeCards.pop());
     }
-
+    render();
 }
-
+function addWaste(e) {
+    if(stock.length = 0) stock = stock.concat(waste.reverse());
+        waste = waste.concat(stock.splice(stock.length-3).reverse());
+    render();
+}
 /*
 function selectCard(e){
     e.target.ParentNode.id.charAt(1)
@@ -104,7 +109,7 @@ function selectCard(e){
 */
 function chkWin(){
     if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) {return 'winner winner chicken dinner';
-} else {return 'you lose';}
+    } else {return 'you lose';}
 }
 
 init();
