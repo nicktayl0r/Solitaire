@@ -1,17 +1,22 @@
 /*----- constants -----*/
-var suit = ['spade', 'heart', 'club', 'diamond'];
+var suit = ['spades', 'hearts', 'clubs', 'diamonds'];
 var rank = [1,2,3,4,5,6,7,8,9,10,11,12,13];
 
 /*----- app's state (variables) -----*/
-var deck, stock, tableau, foundation, waste, activeCard;
+var deck, stock, tableau, foundation, waste, selectedCard;
 /*----- cached element references -----*/
 var tableauEl = document.getElementById('tableau');
 var foundationEl = document.getElementById("foundation");
 var wasteEl = document.getElementById("waste");
 var stockEl = document.getElementById("stock");
 /*----- event listeners -----*/
+tableauEl.addEventListener('click', selectCard);
+stockEl.addEventListener('click', addWaste);
+wasteEl.addEventListener('click', selectCard);
+foundationEl.addEventListener('click', selectCard);
+document.getElementById('restart').addEventListener('click',init)
+
 //restart button just inits
-//onclick for cards set to active card, pop from array
 /*----- functions -----*/
 
 function init() {
@@ -23,12 +28,38 @@ function init() {
     foundation = [[],[],[],[]];
     makeDeck();
     shuffleDeck();
-    makeTableau();   
+    makeTableau();
+    render();   
 }
 
 function render(){
-    //update dom from arrays
-    //one div for each item in array
+    var tChildren = tableauEl.children;
+    console.log()
+    for(col in tableau){
+        while(tChildren[col].firstChild) {
+            tChildren[col].removeChild(tChildren[col].firstChild);
+        }
+        for(card in tableau[col]) {
+           if(tableau[col][card].isVisible){ tChildren[col].innerHTML = tChildren[col].innerHTML + `<div class='cards'>${tableau[col][card].rank} of ${tableau[col][card].suit}</div>`;
+            } else { tChildren[col].innerHTML = tChildren[col].innerHTML + `<div class='cards'>boi</div>`;}
+        } 
+    }
+    
+    for(card in waste) {
+        var wChildren = wasteEl.children
+        while(wasteEl.childElementCount>0){
+             wasteEl.removeChild(wasteEl.firstChild);
+             waste[card].isVisible = false;
+             waste[card].isActive = false;
+        }
+        for(card in waste){
+            if (card > waste.length-4) {
+                wasteEl.innerHTML = wasteEl.innerHTML +`<div class='cards'>${waste[card].rank} of ${waste[card].suit}</div>`;
+                if(card === waste.length-1) waste[card].isActive = true;
+            }
+        }
+    }    
+    //update waste visibility
     //set the active and the visiblility based on the dom;
     chkWin();
 }
@@ -40,8 +71,8 @@ class Card {
 	    this.isActive = false;
         this.isVisible = false;
     }
-}
 
+}
 function makeDeck(){
     for(s in suit) {	
 		for(r in rank) {
@@ -50,7 +81,6 @@ function makeDeck(){
     }
     return deck;
 }
-
 function shuffleDeck() {
     for(i=0;i<52;i++) {
             var randI = Math.floor(Math.random()*(deck.length));
@@ -59,7 +89,6 @@ function shuffleDeck() {
         }
     return stock;
 }
-
 function makeTableau() {
     for(t in tableau) {
         while(tableau[t].length <= t ){
@@ -70,7 +99,6 @@ function makeTableau() {
         lastCard.isVisible = true;
     }
 }
-
 function addFoundation(e) {
     var fTarget = foundation[e.target.id.charAt(1)];
     var isSuit = ((fTarget[fTarget.length-1].suit === activeCard.suit) || (fTarget.length === 0));
@@ -93,24 +121,29 @@ function addTableau(e) {
     render();
 }
 function addWaste(e) {
-    if(stock.length = 0) stock = stock.concat(waste.reverse());
-        waste = waste.concat(stock.splice(stock.length-3).reverse());
+    if(stock.length === 0) {
+        stock = stock.concat(waste.reverse());
+        waste = []; 
+    }
+    waste = waste.concat(stock.splice(stock.length-3).reverse());
+    console.log(waste);
+    console.log(stock);
     render();
 }
-/*
+
 function selectCard(e){
-    e.target.ParentNode.id.charAt(1)
-    var tCard = tableau[][tableau[].length-1];
-    //which array is it in
-    // how do i acquire the  in the tableau array 
-    if (activeCard.length === 0 && tCard.isActive === true) {
-        activeCard.push(tCard) 
+    console.log(`the ${e.target.innerHTML} has been clicked`)
 }
-*/
+
 function chkWin(){
     if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) {return 'winner winner chicken dinner';
     } else {return 'you lose';}
 }
-
 init();
 render();
+
+// active card pushing
+// render will create divs for each item in array
+// moving cards within the tableau
+// flipping cards in the tableau
+//
