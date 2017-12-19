@@ -48,14 +48,13 @@ function render(){
     while(wasteEl.childElementCount>0){
          wasteEl.removeChild(wasteEl.firstChild);
          count++;
-        }
-        
-        for(card in waste) {
-            waste[card].isActive = false;
-            if (card > waste.length-4) {
-                wasteEl.innerHTML = wasteEl.innerHTML +`<div class='cards'>${waste[card].rank} of ${waste[card].suit}</div>`;
-                if(Number(card) === waste.length-1) waste[card].isActive = true;
-            }    
+    }    
+    for(card in waste) {
+        waste[card].isActive = false;
+        if (card > waste.length-4) {
+            wasteEl.innerHTML = wasteEl.innerHTML +`<div class='cards'>${waste[card].rank} of ${waste[card].suit}</div>`;
+            if(Number(card) === waste.length-1) waste[card].isActive = true;
+        }    
     }    
     
     chkWin();
@@ -106,12 +105,13 @@ function addFoundation(e) {
 }
 
 function addTableau(e) {
-    var tTarget = tableau[e.target.id.charAt(1)];
-    var rankChk = activecard.rank+1 === tTarget[tTarget.length-1].rank;
-    var suitChk = suits.indexOf(activeCard.suit)%2 !== suits.indexOf(tTarget[tTarget.length-1].suit)%2;
+    var tTarget = tableau[e.parentNode.id.charAt(1)];
+    var rankChk = activeCard.rank+1 === tTarget[tTarget.length-1].rank;
+    var suitChk = suit.indexOf(activeCard.suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
     if((activeCard.rank === 13 && tTarget.length === 0) || (rankChk && suitChk)){
         tTarget[tTarget.length-1].isActive = false;
-        tTarget.push(activeCards.pop());
+        tTarget.push(activeCard.pop());
+        console.log(e.target.parentNode.lastElementChild)
     }
     render();
 }
@@ -121,14 +121,24 @@ function addWaste(e) {
         waste = []; 
     } else {
         waste = waste.concat(stock.splice(stock.length-3).reverse());
-        console.log(waste);
-        console.log(stock);
     }
     render();
 }
 
 function selectCard(e){
-    console.log(`the ${e.target.innerHTML} has been clicked`)
+    if (activeCard.length === 0) {
+        console.log(`the ${e.target.innerHTML} has been clicked`);
+        inArr = e.target.parentNode.className;
+        if(inArr === "waste"){
+            activeCard.push(waste.pop());
+        } else if(inArr === 'tableau'){
+            activeCard.push(tableau[e.target.parentNode.id.charAt(1)].pop());
+        };
+    } else {
+        addTableau(e, activeCard);
+        addFoundation(e, activeCard);
+    }
+    render();
 }
 
 function chkWin(){
@@ -138,7 +148,9 @@ function chkWin(){
 init();
 render();
 
-// active card pushing
-// render will create divs for each item in array
-// moving cards within the tableau
-// flipping cards in the tableau
+
+//a how to push the active card to the tableau or foundation
+//b moving cards within the tableau
+//c flipping cards in the tableau
+//d click and drag functionality
+//e css image library link
