@@ -44,23 +44,20 @@ function render(){
             } else { tChildren[col].innerHTML = tChildren[col].innerHTML + `<div class='cards'>boi</div>`;}
         } 
     }
-    
-    for(card in waste) {
-        var wChildren = wasteEl.children
-        while(wasteEl.childElementCount>0){
-             wasteEl.removeChild(wasteEl.firstChild);
-             waste[card].isVisible = false;
-             waste[card].isActive = false;
+    var count = 0;
+    while(wasteEl.childElementCount>0){
+         wasteEl.removeChild(wasteEl.firstChild);
+         count++;
         }
-        for(card in waste){
+        
+        for(card in waste) {
+            waste[card].isActive = false;
             if (card > waste.length-4) {
                 wasteEl.innerHTML = wasteEl.innerHTML +`<div class='cards'>${waste[card].rank} of ${waste[card].suit}</div>`;
-                if(card === waste.length-1) waste[card].isActive = true;
-            }
-        }
+                if(Number(card) === waste.length-1) waste[card].isActive = true;
+            }    
     }    
-    //update waste visibility
-    //set the active and the visiblility based on the dom;
+    
     chkWin();
 }
 
@@ -69,9 +66,7 @@ class Card {
 	    this.suit = suit;
 	    this.rank = rank;
 	    this.isActive = false;
-        this.isVisible = false;
     }
-
 }
 function makeDeck(){
     for(s in suit) {	
@@ -124,10 +119,11 @@ function addWaste(e) {
     if(stock.length === 0) {
         stock = stock.concat(waste.reverse());
         waste = []; 
+    } else {
+        waste = waste.concat(stock.splice(stock.length-3).reverse());
+        console.log(waste);
+        console.log(stock);
     }
-    waste = waste.concat(stock.splice(stock.length-3).reverse());
-    console.log(waste);
-    console.log(stock);
     render();
 }
 
@@ -146,4 +142,3 @@ render();
 // render will create divs for each item in array
 // moving cards within the tableau
 // flipping cards in the tableau
-//
