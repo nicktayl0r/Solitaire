@@ -10,15 +10,13 @@ var foundationEl = document.getElementById("foundation");
 var wasteEl = document.getElementById("waste");
 var stockEl = document.getElementById("stock");
 /*----- event listeners -----*/
-tableauEl.addEventListener('click', selectCard);
+document.getElementById('game').addEventListener('click', selectCard);
 stockEl.addEventListener('click', addWaste);
-wasteEl.addEventListener('click', selectCard);
-foundationEl.addEventListener('click', selectCard);
-document.getElementById('restart').addEventListener('click',init)
-
+document.getElementById('restart').addEventListener('click',init);
+tableauEl.addEventListener('click', addTableau);
+foundationEl.addEventListener('click', addFoundation);
 //restart button just inits
 /*----- functions -----*/
-
 function init() {
     deck = [];
     activeCard =[];
@@ -31,7 +29,6 @@ function init() {
     makeTableau();
     render();   
 }
-
 function render(){
     var tChildren = tableauEl.children;
     console.log()
@@ -40,8 +37,11 @@ function render(){
             tChildren[col].removeChild(tChildren[col].firstChild);
         }
         for(card in tableau[col]) {
-           if(tableau[col][card].isVisible){ tChildren[col].innerHTML = tChildren[col].innerHTML + `<div class='cards'>${tableau[col][card].rank} of ${tableau[col][card].suit}</div>`;
-            } else { tChildren[col].innerHTML = tChildren[col].innerHTML + `<div class='cards'>boi</div>`;}
+           if(tableau[col][card].isActive){ 
+               tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div class='cards'>${tableau[col][card].rank} of ${tableau[col][card].suit}</div>`;
+            } else { 
+                tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div class='cards'>boi</div>`;
+            }
         } 
     }
     var count = 0;
@@ -55,11 +55,9 @@ function render(){
             wasteEl.innerHTML = wasteEl.innerHTML +`<div class='cards'>${waste[card].rank} of ${waste[card].suit}</div>`;
             if(Number(card) === waste.length-1) waste[card].isActive = true;
         }    
-    }    
-    
+    }        
     chkWin();
 }
-
 class Card {
     constructor(suit, rank) {
 	    this.suit = suit;
@@ -67,10 +65,16 @@ class Card {
 	    this.isActive = false;
     }
 }
+
 function makeDeck(){
     for(s in suit) {	
 		for(r in rank) {
-		deck.push(new Card(suit[s], rank[r]));
+        deck.push(new Card(suit[s], rank[r]));
+        // deck.push({
+        //     suit: suit[s],
+        //     rank: rank[r],
+        //     isActive: false
+        // });
 		}
     }
     return deck;
@@ -90,30 +94,34 @@ function makeTableau() {
         }
         var lastCard = tableau[t][t];
         lastCard.isActive = true;
-        lastCard.isVisible = true;
     }
 }
 function addFoundation(e) {
-    var fTarget = foundation[e.target.id.charAt(1)];
-    var isSuit = ((fTarget[fTarget.length-1].suit === activeCard.suit) || (fTarget.length === 0));
-    var isRank = fTarget.length === activeCard.rank;
-    if  (isRank && isSuit) {
-        fTarget[fTarget.length-1].isActive = false;
-        fTarget.push(activeCard.pop());
+    if(activeCard.length ===1){
+        var fTarget = foundation[e.target.id.charAt(1)];
+        console.log();
+        var isSuit = ((fTarget.length === 0) || (fTarget[fTarget.length-1].suit === activeCard[0].suit));
+        var isRank = fTarget.length + 1 === activeCard[0].rank;
+        if  (isRank && isSuit) {
+            fTarget.push(activeCard.pop());
+        }
+        console.log(foundation);
+        render();    
     }
-    render();    
 }
-
 function addTableau(e) {
-    var tTarget = tableau[e.parentNode.id.charAt(1)];
-    var rankChk = activeCard.rank+1 === tTarget[tTarget.length-1].rank;
-    var suitChk = suit.indexOf(activeCard.suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
-    if((activeCard.rank === 13 && tTarget.length === 0) || (rankChk && suitChk)){
-        tTarget[tTarget.length-1].isActive = false;
-        tTarget.push(activeCard.pop());
-        console.log(e.target.parentNode.lastElementChild)
-    }
-    render();
+    if(activeCard.length === 1) {
+        console.log(e.target.parentNode)
+        var tTarget = tableau[e.target.parentNode.id.charAt(1)];
+        var rankChk = activeCard[0].rank+1 === tTarget[tTarget.length-1].rank;
+        var suitChk = suit.indexOf(activeCard[0].suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
+        
+        if((activeCard[0].rank === 13 && tTarget.length === 0) || (rankChk && suitChk)){
+            tTarget.push(activeCard.pop());
+            console.log(tTarget);
+        }
+        render();
+    } 
 }
 function addWaste(e) {
     if(stock.length === 0) {
@@ -124,33 +132,41 @@ function addWaste(e) {
     }
     render();
 }
-
 function selectCard(e){
-    if (activeCard.length === 0) {
-        console.log(`the ${e.target.innerHTML} has been clicked`);
-        inArr = e.target.parentNode.className;
-        if(inArr === "waste"){
-            activeCard.push(waste.pop());
-        } else if(inArr === 'tableau'){
+    var inArr = e.target.parentNode.className;
+    if(inArr === 'tableau'){
+        var tColumn = e.target.parentNode.id.charAt(1);
+        var canSelect = tableau[tColumn][tableau[tColumn].length-1];
+        if(!activeCard.length && canSelect.isActive) {
+            console.log(activeCard);
+            console.log(canSelect);
+            console.log('if1');
             activeCard.push(tableau[e.target.parentNode.id.charAt(1)].pop());
-        };
-    } else {
-        addTableau(e, activeCard);
-        addFoundation(e, activeCard);
+        }
+        if(!activeCard.length && !canSelect.isActive){
+            console.log(activeCard);
+            console.log(canSelect);
+            console.log('if2');
+         canSelect.isActive = true;
+        }
+    } else if(inArr === 'waste' && !activeCard.length){
+        activeCard.push(waste.pop());
+    } else if(inArr === 'foundation'){
+        return foundation;
     }
     render();
 }
-
-function chkWin(){
-    if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) {return 'winner winner chicken dinner';
-    } else {return 'you lose';}
+function chkWin() {
+    if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) {
+        return 'winner winner chicken dinner';
+    } else {
+        return 'you lose';
+    }
 }
 init();
 render();
 
-
-//a how to push the active card to the tableau or foundation
-//b moving cards within the tableau
-//c flipping cards in the tableau
+//b moving cards multiple within the tableau
 //d click and drag functionality
 //e css image library link
+//f general styling
