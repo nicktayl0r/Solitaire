@@ -108,21 +108,14 @@ function addFoundation(e) {
                 activeCard.push(fTarget[fTarget.length-1].pop())
             }
         if  (isRank && isSuit) {
-                console.log(e.target.id.charAt(0));
-                console.log(activeCard);
-                console.log(fTarget);
                 e.target.innerHTML = `${activeCard[0].rank} of ${activeCard[0].suit}`;
                 fTarget.push(activeCard.pop());
-                console.log(activeCard);
-                console.log(fTarget);
             }
             render();    
-        console.log(foundation);
     }
 }
 function addTableau(e) {
     if(activeCard.length >= 1) {
-        console.log(tableau[e.target.id.charAt(0)])
         var tTarget = tableau[e.target.id.charAt(0)];
         if(activeCard[0].rank === 13 && tTarget.length === 0){
             while(activeCard.length > 0){
