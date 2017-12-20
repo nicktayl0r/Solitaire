@@ -59,7 +59,12 @@ function render(){
             if(Number(card) === waste.length-1) waste[card].isActive = true;
             a++;    
         }
-    }        
+    }
+    for(arr in foundation) {
+        if(!foundation[arr].length){
+            document.getElementById(arr+'f').innerHTML = '';
+        }
+    }       
     chkWin();
 }
 class Card {
@@ -99,11 +104,20 @@ function addFoundation(e) {
         var fTarget = foundation[e.target.id.charAt(0)];
         var isSuit = ((fTarget.length === 0) || (fTarget[fTarget.length-1].suit === activeCard[0].suit));
         var isRank = fTarget.length + 1 === activeCard[0].rank;
+        if(!activeCard.length) {
+                activeCard.push(fTarget[fTarget.length-1].pop())
+            }
         if  (isRank && isSuit) {
-                fTarget.push(activeCard.shift());
-        }
+                console.log(e.target.id.charAt(0));
+                console.log(activeCard);
+                console.log(fTarget);
+                e.target.innerHTML = `${activeCard[0].rank} of ${activeCard[0].suit}`;
+                fTarget.push(activeCard.pop());
+                console.log(activeCard);
+                console.log(fTarget);
+            }
+            render();    
         console.log(foundation);
-        render();    
     }
 }
 function addTableau(e) {
@@ -149,12 +163,9 @@ function selectCard(e){
                 canSelect.isActive = true;
             }
         } else if(inArr === 'waste' && !activeCard.length){
-            console.log('length of the waste array '+waste.length);
-            console.log('waste dom id ' + e.target.id.charAt(1));
-            console.log('childelements '+e.target.parentNode.childElementCount)
            activeCard = waste.splice(waste.length-(e.target.id.charAt(1), e.target.parentNode.childElementCount-e.target.id.charAt(1)));
         } else if(inArr === 'foundation'){
-            
+
         }
     }
     render();
@@ -167,8 +178,9 @@ function chkWin() {
 init();
 
 
-//* setting a lose condition
-//b click and drag functionality
-//c css image library link
+//a setting a lose condition
+//b css image library link
+//c click and drag functionality
 //d general styling
 //e undo button
+// peer review checklist
