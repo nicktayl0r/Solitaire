@@ -75,3 +75,8 @@ span {
     border-radius: 15px; 
     margin-top: -70px;
 }
+
+.cards:hover {
+    border: 2px dotted #ff69b4;
+
+}
