@@ -53,9 +53,9 @@ span {
     width: 100%
 } 
 #tableau>div {
-    border: none;
+    border:4px solid #0ff;
     background-color: transparent;
-    margin: 5px;
+    margin:5px;
     display:inline-block;
     width:64px;
 }

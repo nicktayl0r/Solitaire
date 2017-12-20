@@ -29,7 +29,6 @@ function init() {
 }
 function render(){
     var tChildren = tableauEl.children;
-    console.log()
     var h = 0;
     for(col in tableau){
         while(tChildren[col].firstChild) {
@@ -51,13 +50,15 @@ function render(){
     while(wasteEl.childElementCount>0){
          wasteEl.removeChild(wasteEl.firstChild);
          count++;
-    }    
+    } 
+    var a = 0;   
     for(card in waste) {
         waste[card].isActive = false;
         if (card > waste.length-4) {
-            wasteEl.innerHTML = wasteEl.innerHTML +`<div class='cards'>${waste[card].rank} of ${waste[card].suit}</div>`;
+            wasteEl.innerHTML = wasteEl.innerHTML +`<div id='7${a}' class='cards'>${waste[card].rank} of ${waste[card].suit}</div>`;
             if(Number(card) === waste.length-1) waste[card].isActive = true;
-        }    
+            a++;    
+        }
     }        
     chkWin();
 }
@@ -107,19 +108,22 @@ function addFoundation(e) {
 }
 function addTableau(e) {
     if(activeCard.length >= 1) {
+        console.log(tableau[e.target.id.charAt(0)])
         var tTarget = tableau[e.target.id.charAt(0)];
+        if(activeCard[0].rank === 13 && tTarget.length === 0){
+            while(activeCard.length > 0){
+                tTarget.push(activeCard.shift());
+            render();
+            }
+        }
         var rankChk = activeCard[0].rank+1 === tTarget[tTarget.length-1].rank;
         var suitChk = suit.indexOf(activeCard[0].suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
-        console.log(`activeCard rank is ${activeCard[0].rank}`);
-        console.log(`rank check returns ${rankChk}`);
-        console.log(`suitChk returns ${suitChk}`);
-        if((activeCard[0].rank === 13 && tTarget.length === 0) || (rankChk && suitChk)){
+        if((rankChk && suitChk)){
                while(activeCard.length > 0){
                    tTarget.push(activeCard.shift());
                }
-            console.log(tTarget);
-        }
-        render();
+               render();
+            }
     } 
 }
 function addWaste(e) {
@@ -132,26 +136,26 @@ function addWaste(e) {
     render();
 }
 function selectCard(e){
-    console.log(e.target.parentNode);
-    var inArr = e.target.parentNode.className;
-    if(inArr === 'tableau'){
-        var tColumn = e.target.id.charAt(0);
-        var tRow = e.target.id.charAt(1);
-        var canSelect = tableau[tColumn][tRow];
-        console.log(tColumn);
-        console.log(tRow);
-        console.log(canSelect);
-
-        if(!activeCard.length && canSelect.isActive) {
-            activeCard = tableau[tColumn].splice(tRow, tableau[tColumn].length-tRow);
+    if(!activeCard.length){
+        var inArr = e.target.parentNode.className;
+        if(inArr === 'tableau'){
+            var tColumn = e.target.id.charAt(0);
+            var tRow = e.target.id.charAt(1);
+            var canSelect = tableau[tColumn][tRow];
+            if(!activeCard.length && canSelect.isActive) {
+                activeCard = tableau[tColumn].splice(tRow, tableau[tColumn].length-tRow);
+            }
+            if(!activeCard.length && canSelect === tableau[tColumn][tableau[tColumn].length-1]){
+                canSelect.isActive = true;
+            }
+        } else if(inArr === 'waste' && !activeCard.length){
+            console.log('length of the waste array '+waste.length);
+            console.log('waste dom id ' + e.target.id.charAt(1));
+            console.log('childelements '+e.target.parentNode.childElementCount)
+           activeCard = waste.splice(waste.length-(e.target.id.charAt(1), e.target.parentNode.childElementCount-e.target.id.charAt(1)));
+        } else if(inArr === 'foundation'){
+            
         }
-        if(!activeCard.length && canSelect === tableau[tColumn][tableau[tColumn].length-1]){
-            canSelect.isActive = true;
-        }
-    } else if(inArr === 'waste' && !activeCard.length){
-         activeCard.push(waste.pop());
-    } else if(inArr === 'foundation'){
-        return foundation;
     }
     render();
 }
@@ -162,7 +166,7 @@ function chkWin() {
 }
 init();
 
-//add king to empty tableau column
+
 //* setting a lose condition
 //b click and drag functionality
 //c css image library link
