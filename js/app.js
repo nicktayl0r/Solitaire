@@ -117,8 +117,7 @@ function makeTableau() {
         while (tableau[t].length <= t ) {
             tableau[t].push(stock.pop());
         }
-        var lastCard = tableau[t][t];
-        lastCard.isActive = true;
+        tableau[t][t].isActive = true;
     }
 }
 function addFoundation(e) {
@@ -188,13 +187,10 @@ function selectTableau(e) {
             }
         }
     }
-
     render();
 }
 function selectWaste(e){
-    if(!activeCard.length){
-        activeCard.push(waste.pop());
-    }
+    if(!activeCard.length) activeCard.push(waste.pop());
     render();
 }
 function chkWin() {
