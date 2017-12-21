@@ -9,11 +9,11 @@ var foundationEl = document.getElementById("foundation");
 var wasteEl = document.getElementById("waste");
 var stockEl = document.getElementById("stock");
 /*----- event listeners -----*/
-document.getElementById('tableau').addEventListener('click', selectTableau);
 stockEl.addEventListener('click', addWaste);
 wasteEl.addEventListener('click', selectWaste)
 document.getElementById('restart').addEventListener('click',init);
 tableauEl.addEventListener('click', addTableau);
+tableauEl.addEventListener('click', selectTableau);
 foundationEl.addEventListener('click', addFoundation);
 /*----- functions -----*/
 function init() {
@@ -31,15 +31,16 @@ function init() {
 function render(){
     var tChildren = tableauEl.children;
     var h = 0;
+
     for(col in tableau){
         while(tChildren[col].firstChild) {
             tChildren[col].removeChild(tChildren[col].firstChild);
         }
         var i=0;
         for(card in tableau[col]) {
-           if(tableau[col][card].isActive){
-               tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
-               tChildren[col].lastChild.style.backgroundImage = "url("+tableau[col][card].imgLink+")"; 
+            if(tableau[col][card].isActive){
+                tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
+                tChildren[col].lastChild.style.backgroundImage = 'url('+tableau[col][card].imgLink+')'; 
             } else { 
                 tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
             }
@@ -53,10 +54,8 @@ function render(){
     for(card in waste) {
         waste[card].isActive = false;
         if (card >= waste.length-3) {
-            //console.log(waste[0]);
             wasteEl.innerHTML = wasteEl.innerHTML +`<div id='7${card}' class='cards'></div>`;
             wasteEl.lastChild.style.backgroundImage = "url("+waste[card].imgLink+")";
-            // console.log(wChildren[card])
             if(Number(card) === waste.length-1) waste[card].isActive = true; 
         }
     }
@@ -74,51 +73,48 @@ class Card {
 	    this.suit = suit;
 	    this.rank = rank;
         this.isActive = false;
-        this.rankTranslator = function() {
-           var rankName;
-           switch(this.rank){
-               case 1:
-                   rankName = 'A';
-                   break;
-               case 10:
-                   rankName = 'r'+rank;
-                   break;    
-               case 11:
-                   rankName = 'J';
-                   break;
-               case 12:
-                   rankName = 'Q';
-                   break;
-               case 13:
-                   rankName = 'K';
-                   break;
-               default:
-                   rankName = 'r0'+this.rank;
-           }
-           this.imgLink = './css/img/' + this.suit + '/'+this.suit+'-'+ rankName+'.svg';
-       };
-       this.rankTranslator();     
+        var rankName;
+        switch(this.rank){
+            case 1:
+                rankName = 'A';
+                break;
+            case 10:
+                rankName = 'r'+rank;
+                break;    
+            case 11:
+                rankName = 'J';
+                break;
+            case 12:
+                rankName = 'Q';
+                break;
+            case 13:
+                rankName = 'K';
+                break;
+            default:
+                rankName = 'r0'+this.rank;
+        }
+        this.imgLink = './css/img/' + this.suit + '/'+this.suit+'-'+ rankName+'.svg';    
     }
 }
 function makeDeck(){
-    for(s in suit) {	
-		for(r in rank) {
-        deck.push(new Card(suit[s], rank[r]));
+    for (s in suit) {	
+		for (r in rank) {
+            deck.push(new Card(suit[s], rank[r]));
 		}
     }
     return deck;
 }
 function shuffleDeck() {
-    for(i=0;i<52;i++) {
-            var randI = Math.floor(Math.random()*(deck.length));
-            stock.push(deck[randI]);
-            deck.splice(randI, 1);
-        }
+    for (var i=0; i<52; i++) {
+        var randI = Math.floor(Math.random()*(deck.length));
+        stock.push(deck[randI]);
+        deck.splice(randI, 1);
+    }
     return stock;
 }
 function makeTableau() {
-    for(t in tableau) {
-        while(tableau[t].length <= t ){
+    for (t in tableau) {
+        while (tableau[t].length <= t ) {
             tableau[t].push(stock.pop());
         }
         var lastCard = tableau[t][t];
@@ -126,23 +122,24 @@ function makeTableau() {
     }
 }
 function addFoundation(e) {
-    if(activeCard.length === 1){
+    if (activeCard.length === 1){
         var fTarget = foundation[e.target.id.charAt(0)];
         var isSuit = ((fTarget.length === 0) || (fTarget[fTarget.length-1].suit === activeCard[0].suit));
         var isRank = fTarget.length + 1 === activeCard[0].rank;
-        if(!activeCard.length) {
-                activeCard.push(fTarget[fTarget.length-1].pop())
-            }
-        if  (isRank && isSuit) {
-                e.target = `${activeCard[0].rank} of ${activeCard[0].suit}`;
-                fTarget.push(activeCard.pop());
-            }
-            render();    
+        if (!activeCard.length) {
+            activeCard.push(fTarget[fTarget.length-1].pop())
+        }
+        if (isRank && isSuit) {
+            e.target = `${activeCard[0].rank} of ${activeCard[0].suit}`;
+            fTarget.push(activeCard.pop());
+        }
+        render();    
     }
 }
 function addTableau(e) {
-    if(activeCard.length >= 1) {
+    if(!!activeCard.length) {
         var tTarget = tableau[e.target.id.charAt(0)];
+        console.log(tTarget);
         if(activeCard[0].rank === 13 && tTarget.length === 0){
             while(activeCard.length > 0){
                 tTarget.push(activeCard.shift());
@@ -153,29 +150,35 @@ function addTableau(e) {
         var suitChk = suit.indexOf(activeCard[0].suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
         if((rankChk && suitChk)){
             while(activeCard.length > 0){
-                   tTarget.push(activeCard.shift());
+                tTarget.push(activeCard.shift());
             }
             render();
         }
     } 
 }
+wasteRebootCount = 0;
 function addWaste(e) {
     if(!activeCard.length){
         if(stock.length === 0) {
             stock = stock.concat(waste.reverse());
-            waste = []; 
+            waste = [];
+            wasteRebootCount++;
+            if(wasteRebootCount>2) console.log('you have lost the game'); 
         } else {
             waste = waste.concat(stock.splice(stock.length-3).reverse());
         }
     }
     render();
 }
-function selectTableau(e){
+function selectTableau(e) {
+    console.log('selectTableau is running');
+    console.log(e.target.id);
     if(!activeCard.length){
         var inArr = e.target.parentNode.className;
         if(inArr === 'tableau'){
             var tColumn = e.target.id.charAt(0);
-            var tRow = e.target.id.charAt(1);
+            var tRow = e.target.id.substring(1);
+            console.log(tRow)
             var canSelect = tableau[tColumn][tRow];
             if(!activeCard.length && canSelect.isActive) {
                 activeCard = tableau[tColumn].splice(tRow, tableau[tColumn].length-tRow);
@@ -195,12 +198,11 @@ function selectWaste(e){
     render();
 }
 function chkWin() {
-    if (foundation[0].length === foundation[1].length === foundation[2].length === foundation[3].length === 13) {console.log('winner winner chicken dinner');}
+    if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52) {console.log('winner winner chicken dinner');}
 }
 init();
 
-//b logical bug with multiple  cards from the waste array, single digit id lookup bug
-//c setting a lose condition
+//b logical bug with multiple cards from the waste array
 //d click and drag functionality
 //e peer review checklist
 //* general styling
