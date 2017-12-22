@@ -17,7 +17,6 @@ body{
  #waste {
      display: inline-block;
  }
-
 #tableau {
     border-bottom: 3px solid #ff69b4;
     margin: 60px 20px;
@@ -42,7 +41,6 @@ body{
 #waste div:last-child {
     box-shadow: 0px 10px 10px #ff69b4;
 }
-
 #stock div{
     box-shadow: 5px 10px 0px #ff69b4;
     display: flex;
@@ -60,13 +58,11 @@ span {
     display:inline-block;
     width:64px;
 }
-
 .foundation{
     display: inline-flex;
     margin-left: 20px;
     background-size: cover;
 }
-
 .foundation>div {
     width:64px;
     height: 89px;
@@ -76,11 +72,9 @@ span {
     border-radius: 15px; 
     margin-top: -70px;
 }
-
 .cards:hover {
     border: 2px dotted #ff69b4;
 }
-
 #restart {
     font-size: 20px;
     margin-bottom: 25px;
