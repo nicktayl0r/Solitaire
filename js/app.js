@@ -29,6 +29,7 @@ function init() {
     render();   
 }
 function render(){
+    
     var tChildren = tableauEl.children;
     var h = 0;
     for (col in tableau){
