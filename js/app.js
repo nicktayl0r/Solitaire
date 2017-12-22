@@ -31,14 +31,13 @@ function init() {
 function render(){
     var tChildren = tableauEl.children;
     var h = 0;
-
-    for(col in tableau){
-        while(tChildren[col].firstChild) {
+    for (col in tableau){
+        while (tChildren[col].firstChild) {
             tChildren[col].removeChild(tChildren[col].firstChild);
         }
         var i=0;
-        for(card in tableau[col]) {
-            if(tableau[col][card].isActive){
+        for (card in tableau[col]) {
+            if (tableau[col][card].isActive){
                 tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
                 tChildren[col].lastChild.style.backgroundImage = 'url('+tableau[col][card].imgLink+')'; 
             } else { 
@@ -48,19 +47,19 @@ function render(){
         } 
         h++;    
     }
-    while(wasteEl.childElementCount>0){
+    while (wasteEl.childElementCount>0){
          wasteEl.removeChild(wasteEl.firstChild);
     } 
-    for(card in waste) {
+    for (card in waste) {
         waste[card].isActive = false;
         if (card >= waste.length-3) {
             wasteEl.innerHTML = wasteEl.innerHTML +`<div id='7${card}' class='cards'></div>`;
             wasteEl.lastChild.style.backgroundImage = "url("+waste[card].imgLink+")";
-            if(Number(card) === waste.length-1) waste[card].isActive = true; 
+            if (Number(card) === waste.length-1) waste[card].isActive = true; 
         }
     }
-    for(arr in foundation) {
-        if(!foundation[arr].length){
+    for (arr in foundation) {
+        if (!foundation[arr].length){
             document.getElementById(arr+'f').style.backgroundImage = "url(none)";
         } else {
             document.getElementById(arr+'f').style.backgroundImage = "url("+foundation[arr][foundation[arr].length-1].imgLink+")"
@@ -129,40 +128,38 @@ function addFoundation(e) {
             activeCard.push(fTarget[fTarget.length-1].pop())
         }
         if (isRank && isSuit) {
-            e.target = `${activeCard[0].rank} of ${activeCard[0].suit}`;
             fTarget.push(activeCard.pop());
         }
         render();    
     }
 }
 function addTableau(e) {
-    if(!!activeCard.length) {
+    if (!!activeCard.length) {
         var tTarget = tableau[e.target.id.charAt(0)];
-        console.log(tTarget);
-        if(activeCard[0].rank === 13 && tTarget.length === 0){
-            while(activeCard.length > 0){
+        if (activeCard[0].rank === 13 && tTarget.length === 0){
+            while (activeCard.length > 0){
                 tTarget.push(activeCard.shift());
             render();
             }
         }
         var rankChk = activeCard[0].rank+1 === tTarget[tTarget.length-1].rank;
         var suitChk = suit.indexOf(activeCard[0].suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
-        if((rankChk && suitChk)){
-            while(activeCard.length > 0){
+        if (rankChk && suitChk){
+            while (activeCard.length > 0){
                 tTarget.push(activeCard.shift());
             }
             render();
         }
     } 
 }
-wasteRebootCount = 0;
+var wasteRebootCount = 0;
 function addWaste(e) {
-    if(!activeCard.length){
-        if(stock.length === 0) {
+    if (!activeCard.length){
+        if (stock.length === 0) {
             stock = stock.concat(waste.reverse());
             waste = [];
             wasteRebootCount++;
-            if(wasteRebootCount>2) console.log('you have lost the game'); 
+            if (wasteRebootCount > 2) console.log('you have lost the game'); 
         } else {
             waste = waste.concat(stock.splice(stock.length-3).reverse());
         }
@@ -170,36 +167,27 @@ function addWaste(e) {
     render();
 }
 function selectTableau(e) {
-    console.log('selectTableau is running');
-    console.log(e.target.id);
-    if(!activeCard.length){
+    if (!activeCard.length){
         var inArr = e.target.parentNode.className;
-        if(inArr === 'tableau'){
+        if (inArr === 'tableau'){
             var tColumn = e.target.id.charAt(0);
             var tRow = e.target.id.substring(1);
-            console.log(tRow)
             var canSelect = tableau[tColumn][tRow];
-            if(!activeCard.length && canSelect.isActive) {
+            if (!activeCard.length && canSelect.isActive) {
                 activeCard = tableau[tColumn].splice(tRow, tableau[tColumn].length-tRow);
             }
-            if(!activeCard.length && canSelect === tableau[tColumn][tableau[tColumn].length-1]){
+            if (!activeCard.length && canSelect === tableau[tColumn][tableau[tColumn].length-1]){
                 canSelect.isActive = true;
             }
+            render();
         }
     }
-    render();
 }
 function selectWaste(e){
-    if(!activeCard.length) activeCard.push(waste.pop());
+    if (!activeCard.length) activeCard.push(waste.pop());
     render();
 }
 function chkWin() {
     if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52) {console.log('winner winner chicken dinner');}
 }
 init();
-
-//b logical bug with multiple cards from the waste array
-//d click and drag functionality
-//e peer review checklist
-//* general styling
-//* e undo button
