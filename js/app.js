@@ -192,3 +192,9 @@ function chkWin() {
     if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52) {console.log('winner winner chicken dinner');}
 }
 init();
+
+
+//classes in seperate file
+//seperate render function
+
+// styling

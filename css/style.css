@@ -1,81 +1,74 @@
-body{
+*{
     background-color: black;
     font-family: 'Yellowtail', cursive;
-    color: #ff69b4;
+    color: magenta;
     text-shadow: 0px 5px 10px #0FF;
     text-align: center;
 }
 #game {
-    border: 3px solid #ff69b4;
+    border: 3px solid magenta;
     box-shadow: 0px 5px 30px #0FF;
     box-sizing: border-box;
-    width: 700px;
-    margin: auto;
+    width: 643px;
+    margin: 0 auto;
     border-radius: 50px;
-    padding-top: 10px;
 }
- #waste {
-     display: inline-block;
- }
 #tableau {
     border-bottom: 3px solid #ff69b4;
-    margin: 60px 20px;
+    margin: 10px 20px;
     box-shadow: 0 3px 2px -2px #0FF;
-    padding: 20px 0;
     display: flex;
-    justify-content: center;    
+    justify-content: center;
+    box-sizing: content-box;    
 }
-#foundation div {
+#tableau > div {
+    background-color: transparent;
+    margin:5px;
+    width: 64px;
+    display:inline-block;
+    min-height: 312px;
+    border-bottom: 3px solid #ff69b4;
+}
+#tableau > div > div:first-child {
+    margin:0;
+}
+#flex {
+    display: flex;
+    height: 100px;
+    justify-content: flex-start;
+}
+#waste {
     display: inline-block;
+    margin-top: 0;
+    width: 198px;
+}
+.foundation{
+    display: inline-block;
+    margin: 0px 5px;
+    background-size: cover;
+}
+.foundation > div,  #stock, #waste{
+    width:64px;
+    height: 89px;
+    border:2px solid magenta;
+    display: inline-flex;
+    background-color: #0FF;
+    border-radius: 15px; 
+}
+#restart {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+h1 {
+    margin: 10px 0;
 }
 .cards {
     width:64px;
     height: 89px;
-    border:2px solid #ff69b4;
+    border:2px solid magenta;
     display: block;
-    background-color: #0FF;
     border-radius: 15px; 
-    margin-top: -70px;
+        margin-top: -70px;
     background-size: cover;
-}
-#waste div:last-child {
-    box-shadow: 0px 10px 10px #ff69b4;
-}
-#stock div{
-    box-shadow: 5px 10px 0px #ff69b4;
-    display: flex;
-}
-span {
-    border-radius: 15px;
-    border-right: 5px solid  #ff69b4;
-    border-left: 5px solid #ff69b4;
-    width: 100%
-} 
-#tableau>div {
-    border:4px solid #0ff;
-    background-color: transparent;
-    margin:5px;
-    display:inline-block;
-    width:64px;
-}
-.foundation{
-    display: inline-flex;
-    margin-left: 20px;
-    background-size: cover;
-}
-.foundation>div {
-    width:64px;
-    height: 89px;
-    border:2px solid #ff69b4;
-    display: inline-flex;
-    background-color: #0FF;
-    border-radius: 15px; 
-    margin-top: -70px;
-}
-.cards:hover {
-    border: 2px dotted #ff69b4;
-}
-#restart {
-    font-size: 20px;
-    margin-bottom: 25px;
+    background-color:cyan;
 }
