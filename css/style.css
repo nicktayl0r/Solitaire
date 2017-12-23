@@ -2,73 +2,85 @@
     background-color: black;
     font-family: 'Yellowtail', cursive;
     color: magenta;
-    text-shadow: 0px 5px 10px #0FF;
+    text-shadow: 0px 5px 10px cyan;
     text-align: center;
 }
 #game {
     border: 3px solid magenta;
-    box-shadow: 0px 5px 30px #0FF;
+    box-shadow: 0px 5px 30px cyan;
     box-sizing: border-box;
     width: 643px;
     margin: 0 auto;
     border-radius: 50px;
 }
 #tableau {
-    border-bottom: 3px solid #ff69b4;
+    border-bottom: 3px solid magenta;
     margin: 10px 20px;
-    box-shadow: 0 3px 2px -2px #0FF;
+    box-shadow: 0 3px 2px -2px cyan;
     display: flex;
     justify-content: center;
     box-sizing: content-box;    
 }
 #tableau > div {
     background-color: transparent;
-    margin:5px;
+    margin: 5px;
     width: 64px;
-    display:inline-block;
+    display: inline-block;
     min-height: 312px;
-    border-bottom: 3px solid #ff69b4;
+    border-bottom: 3px solid magenta;
 }
 #tableau > div > div:first-child {
-    margin:0;
+    margin: 0;
 }
 #flex {
     display: flex;
+    justify-content: center;
     height: 100px;
-    justify-content: flex-start;
+    box-sizing: content-box;
+    background: none;
+}
+#stock, #foundation, #waste {
+ display: inline-flex;   
 }
 #waste {
-    display: inline-block;
     margin-top: 0;
-    width: 198px;
+    height: 90px;
 }
-.foundation{
+#waste > div {
+    margin: 0;
     display: inline-block;
+    margin-left: -32px;
+}
+
+#waste > div:first-child {
+    margin-left: 0;
+}
+#foundation{
     margin: 0px 5px;
     background-size: cover;
+    background: none;
 }
-.foundation > div,  #stock, #waste{
-    width:64px;
+#foundation > div, #stock {
+    width: 64px;
     height: 89px;
-    border:2px solid magenta;
-    display: inline-flex;
-    background-color: #0FF;
+    margin: 0 2.5px;
+    border: 2px solid magenta;
+    display: inline-block;
+    background-color: cyan;
     border-radius: 15px; 
+    background-size: cover; 
 }
 #restart {
     font-size: 20px;
     margin-bottom: 10px;
 }
-h1 {
-    margin: 10px 0;
-}
 .cards {
-    width:64px;
+    width: 64px;
     height: 89px;
-    border:2px solid magenta;
-    display: block;
+    border: 2px solid magenta;
+    display: inline-block;
     border-radius: 15px; 
-        margin-top: -70px;
+    margin-top: -70px;
     background-size: cover;
     background-color:cyan;
 }
