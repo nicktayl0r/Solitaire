@@ -4,6 +4,7 @@
     color: magenta;
     text-shadow: 0px 5px 10px cyan;
     text-align: center;
+    cursor: crosshair;
 }
 #game {
     border: 3px solid magenta;
@@ -38,20 +39,21 @@
     height: 100px;
     box-sizing: content-box;
     background: none;
+    margin: 0 10px;
 }
 #stock, #foundation, #waste {
- display: inline-flex;   
+    display: inline-flex;   
 }
 #waste {
-    margin-top: 0;
+    margin: 0 5px;
     height: 90px;
+    width: 138px;
 }
 #waste > div {
     margin: 0;
     display: inline-block;
     margin-left: -32px;
 }
-
 #waste > div:first-child {
     margin-left: 0;
 }
@@ -70,10 +72,6 @@
     border-radius: 15px; 
     background-size: cover; 
 }
-#restart {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
 .cards {
     width: 64px;
     height: 89px;
@@ -83,4 +81,12 @@
     margin-top: -70px;
     background-size: cover;
     background-color:cyan;
+}
+header {
+    width: 643px;
+    margin: 0 auto 10px;
+    font-size: 20px;
+}
+span {
+    margin: 0 60px;
 }
