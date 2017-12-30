@@ -63,6 +63,7 @@ function render(){
     for (arr in foundation) {
         if (!foundation[arr].length){
             document.getElementById(arr+'f').style.backgroundImage = "url(none)";
+            document.getElementById(arr+'f').style.background ="linear-gradient(135deg, magenta, cyan)";
         } else {
             document.getElementById(arr+'f').style.backgroundImage = "url("+foundation[arr][foundation[arr].length-1].imgLink+")"
         }
