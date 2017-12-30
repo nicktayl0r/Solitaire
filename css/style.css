@@ -90,3 +90,9 @@ header {
 span {
     margin: 0 60px;
 }
+#game > #active-cards {
+    pointer-events: none;
+    background: none;
+    display: inline-block;
+    width: 64px;
+}

@@ -10,11 +10,11 @@ var wasteEl = document.getElementById("waste");
 var stockEl = document.getElementById("stock");
 /*----- event listeners -----*/
 stockEl.addEventListener('click', addWaste);
-wasteEl.addEventListener('click', selectWaste)
+wasteEl.addEventListener('mousedown', selectWaste)
 document.getElementById('restart').addEventListener('click',init);
-tableauEl.addEventListener('click', addTableau);
-tableauEl.addEventListener('click', selectTableau);
-foundationEl.addEventListener('click', addFoundation);
+tableauEl.addEventListener('mouseup', addTableau);
+tableauEl.addEventListener('mousedown', selectTableau);
+foundationEl.addEventListener('mouseup', addFoundation);
 /*----- functions -----*/
 function init() {
     deck = [];
@@ -26,10 +26,10 @@ function init() {
     makeDeck();
     shuffleDeck();
     makeTableau();
-    render();   
+    render();
+    displayActive(); 
 }
 function render(){
-    
     var tChildren = tableauEl.children;
     var h = 0;
     for (col in tableau){
@@ -131,7 +131,8 @@ function addFoundation(e) {
         if (isRank && isSuit) {
             fTarget.push(activeCard.pop());
         }
-        render();    
+        render();
+        displayActive(e);    
     }
 }
 function addTableau(e) {
@@ -140,7 +141,6 @@ function addTableau(e) {
         if (activeCard[0].rank === 13 && tTarget.length === 0){
             while (activeCard.length > 0){
                 tTarget.push(activeCard.shift());
-            render();
             }
         }
         var rankChk = activeCard[0].rank+1 === tTarget[tTarget.length-1].rank;
@@ -149,8 +149,9 @@ function addTableau(e) {
             while (activeCard.length > 0){
                 tTarget.push(activeCard.shift());
             }
-            render();
         }
+        render();
+        displayActive(e);
     } 
 }
 var wasteRebootCount = 0;
@@ -165,6 +166,7 @@ function addWaste(e) {
             waste = waste.concat(stock.splice(stock.length-3).reverse());
         }
     }
+    displayActive(e);
     render();
 }
 function selectTableau(e) {
@@ -180,21 +182,53 @@ function selectTableau(e) {
             if (!activeCard.length && canSelect === tableau[tColumn][tableau[tColumn].length-1]){
                 canSelect.isActive = true;
             }
+            displayActive(e);
             render();
         }
     }
 }
 function selectWaste(e){
     if (!activeCard.length) activeCard.push(waste.pop());
+    displayActive(e);
     render();
 }
 function chkWin() {
-    if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52) {console.log('winner winner chicken dinner');}
+    if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52){
+        console.log('winner winner chicken dinner');
+        tableauEl.textContent = 'Congratulations!';
+    }
 }
 init();
 
-
-//classes in seperate file
-//seperate render function
-
-// styling
+function displayActive(e) {
+    var gameBoard = document.getElementById('active-cards');
+    while(gameBoard.firstChild){
+            gameBoard.removeChild(gameBoard.firstChild);
+        
+    }
+    if(activeCard.length) {
+        var shiftX = e.target.clientX - e.target.getBoundingClientRect().left;
+        var shiftY = e.target.clientY - e.target.getBoundingClientRect().top;
+        document.getElementById('active-cards').style.position = 'absolute';
+        document.getElementById('active-cards').style.zIndex = 1000;
+        if(e.target.id.substring(1) === e.path[1].lastChild.id.substring(1)) {
+            document.getElementById('active-cards').appendChild(e.target);
+        }else{
+            for(child in e.path[1].children){
+                if(e.path[1].childNodes[e.target.id.substring(1)]) {
+                    console.log(e.path[1].childNodes[e.target.id.substring(1)]);
+                    document.getElementById('active-cards').appendChild(e.path[1].childNodes[e.target.id.substring(1)]);
+                };
+            };
+        }    
+        moveAt(e.clientX, e.clientY);
+        function moveAt(pageX, pageY) {
+            document.getElementById('active-cards').style.left = pageX + 'px';
+            document.getElementById('active-cards').style.top = pageY + 'px';
+        }
+        function onMouseMove(e) {
+            moveAt(e.clientX, e.clientY);
+        }
+        document.addEventListener('mousemove', onMouseMove);
+    }
+}
