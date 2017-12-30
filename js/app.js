@@ -131,28 +131,29 @@ function addFoundation(e) {
         if (isRank && isSuit) {
             fTarget.push(activeCard.pop());
         }
-        render();
-        displayActive(e);    
     }
+    render();
+    displayActive(e);    
 }
 function addTableau(e) {
-    if (!!activeCard.length) {
+    if (activeCard.length) {
         var tTarget = tableau[e.target.id.charAt(0)];
         if (activeCard[0].rank === 13 && tTarget.length === 0){
             while (activeCard.length > 0){
                 tTarget.push(activeCard.shift());
+            };
+        } else {
+            var rankChk = activeCard[0].rank+1 === tTarget[tTarget.length-1].rank;
+            var suitChk = suit.indexOf(activeCard[0].suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
+            if (rankChk && suitChk){
+                while (activeCard.length > 0){
+                    tTarget.push(activeCard.shift());
+                }
             }
-        }
-        var rankChk = activeCard[0].rank+1 === tTarget[tTarget.length-1].rank;
-        var suitChk = suit.indexOf(activeCard[0].suit)%2 !== suit.indexOf(tTarget[tTarget.length-1].suit)%2;
-        if (rankChk && suitChk){
-            while (activeCard.length > 0){
-                tTarget.push(activeCard.shift());
-            }
-        }
-        render();
-        displayActive(e);
-    } 
+        } 
+    }
+    render();
+    displayActive(e);
 }
 var wasteRebootCount = 0;
 function addWaste(e) {
@@ -182,10 +183,10 @@ function selectTableau(e) {
             if (!activeCard.length && canSelect === tableau[tColumn][tableau[tColumn].length-1]){
                 canSelect.isActive = true;
             }
-            displayActive(e);
-            render();
         }
     }
+    displayActive(e);
+    render();
 }
 function selectWaste(e){
     if (!activeCard.length) activeCard.push(waste.pop());
@@ -193,18 +194,13 @@ function selectWaste(e){
     render();
 }
 function chkWin() {
-    if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52){
-        console.log('winner winner chicken dinner');
-        tableauEl.textContent = 'Congratulations!';
-    }
+    if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52) tableauEl.textContent = 'Congratulations!';
 }
 init();
-
 function displayActive(e) {
     var gameBoard = document.getElementById('active-cards');
     while(gameBoard.firstChild){
             gameBoard.removeChild(gameBoard.firstChild);
-        
     }
     if(activeCard.length) {
         var shiftX = e.target.clientX - e.target.getBoundingClientRect().left;
