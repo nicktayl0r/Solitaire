@@ -40,9 +40,10 @@ function render(){
         for (card in tableau[col]) {
             if (tableau[col][card].isActive){
                 tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
-                tChildren[col].lastChild.style.backgroundImage = 'url('+tableau[col][card].imgLink+')'; 
+                tChildren[col].lastChild.style.backgroundImage = 'url('+tableau[col][card].imgLink+')';
             } else { 
                 tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
+                tChildren[col].lastChild.setAttribute("style", "background:linear-gradient(135deg, #00ffff 0%,#ff00ff 100%);" );
             }
             i++;
         } 
@@ -65,7 +66,13 @@ function render(){
         } else {
             document.getElementById(arr+'f').style.backgroundImage = "url("+foundation[arr][foundation[arr].length-1].imgLink+")"
         }
-    }       
+        
+    }
+    if(!stock.length){
+        stockEl.setAttribute("style", "background-color:black; border:3px solid cyan;");
+    } else {
+        stockEl.setAttribute("style", "background:linear-gradient(135deg, #00ffff 0%,#ff00ff 100%); border:2px solid magenta;");
+    }
     chkWin();
 }
 class Card {
@@ -151,22 +158,20 @@ function addTableau(e) {
                 }
             }
         } 
+        render();
+        displayActive(e);
     }
-    render();
-    displayActive(e);
 }
-var wasteRebootCount = 0;
 function addWaste(e) {
     if (!activeCard.length){
         if (stock.length === 0) {
             stock = stock.concat(waste.reverse());
             waste = [];
-            wasteRebootCount++;
-            if (wasteRebootCount > 2) console.log('you have lost the game'); 
         } else {
             waste = waste.concat(stock.splice(stock.length-3).reverse());
         }
     }
+    console.log(!stock.length)
     displayActive(e);
     render();
 }
