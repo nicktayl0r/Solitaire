@@ -1,20 +1,20 @@
 /*----- constants -----*/
-var suit = ['spades', 'hearts', 'clubs', 'diamonds'];
+var suit = ["spades", "hearts", "clubs", "diamonds"];
 var rank = [1,2,3,4,5,6,7,8,9,10,11,12,13];
-/*----- app's state (variables) -----*/
+/*----- app"s state (variables) -----*/
 var deck, stock, tableau, foundation, waste;
 /*----- cached element references -----*/
-var tableauEl = document.getElementById('tableau');
+var tableauEl = document.getElementById("tableau");
 var foundationEl = document.getElementById("foundation");
 var wasteEl = document.getElementById("waste");
 var stockEl = document.getElementById("stock");
 /*----- event listeners -----*/
-stockEl.addEventListener('click', addWaste);
-wasteEl.addEventListener('mousedown', selectWaste)
-document.getElementById('restart').addEventListener('click',init);
-tableauEl.addEventListener('mouseup', addTableau);
-tableauEl.addEventListener('mousedown', selectTableau);
-foundationEl.addEventListener('mouseup', addFoundation);
+stockEl.addEventListener("click", addWaste);
+wasteEl.addEventListener("mousedown", selectWaste)
+document.getElementById("restart").addEventListener("click",init);
+tableauEl.addEventListener("mouseup", addTableau);
+tableauEl.addEventListener("mousedown", selectTableau);
+foundationEl.addEventListener("mouseup", addFoundation);
 /*----- functions -----*/
 function init() {
     deck = [];
@@ -39,10 +39,10 @@ function render(){
         var i=0;
         for (card in tableau[col]) {
             if (tableau[col][card].isActive){
-                tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
-                tChildren[col].lastChild.style.backgroundImage = 'url('+tableau[col][card].imgLink+')';
+                tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id="${h}${i}"class="cards"></div>`;
+                tChildren[col].lastChild.style.backgroundImage = "url("+tableau[col][card].imgLink+")";
             } else { 
-                tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id='${h}${i}'class='cards'></div>`;
+                tChildren[col].innerHTML = `${tChildren[col].innerHTML}<div id="${h}${i}"class="cards"></div>`;
                 tChildren[col].lastChild.setAttribute("style", "background:linear-gradient(135deg, #00ffff 0%,#ff00ff 100%);" );
             }
             i++;
@@ -55,19 +55,18 @@ function render(){
     for (card in waste) {
         waste[card].isActive = false;
         if (card >= waste.length-3) {
-            wasteEl.innerHTML = wasteEl.innerHTML +`<div id='7${card}' class='cards'></div>`;
+            wasteEl.innerHTML = wasteEl.innerHTML +`<div id="7${card}" class="cards"></div>`;
             wasteEl.lastChild.style.backgroundImage = "url("+waste[card].imgLink+")";
             if (Number(card) === waste.length-1) waste[card].isActive = true; 
         }
     }
     for (arr in foundation) {
         if (!foundation[arr].length){
-            document.getElementById(arr+'f').style.backgroundImage = "url(none)";
-            document.getElementById(arr+'f').style.background ="linear-gradient(135deg, magenta, cyan)";
+            document.getElementById(arr+"f").style.backgroundImage = "url(none)";
+            document.getElementById(arr+"f").style.background ="linear-gradient(135deg, magenta, cyan)";
         } else {
-            document.getElementById(arr+'f').style.backgroundImage = "url("+foundation[arr][foundation[arr].length-1].imgLink+")"
+            document.getElementById(arr+"f").setAttribute("style", "background-color:cyan; background-size:cover; background-image:url("+foundation[arr][foundation[arr].length-1].imgLink+");");
         }
-        
     }
     if(!stock.length){
         stockEl.setAttribute("style", "background-color:black; border:3px solid cyan;");
@@ -84,24 +83,24 @@ class Card {
         var rankName;
         switch(this.rank){
             case 1:
-                rankName = 'A';
+                rankName = "A";
                 break;
             case 10:
-                rankName = 'r'+rank;
+                rankName = "r"+rank;
                 break;    
             case 11:
-                rankName = 'J';
+                rankName = "J";
                 break;
             case 12:
-                rankName = 'Q';
+                rankName = "Q";
                 break;
             case 13:
-                rankName = 'K';
+                rankName = "K";
                 break;
             default:
-                rankName = 'r0'+this.rank;
+                rankName = "r0"+this.rank;
         }
-        this.imgLink = './css/img/' + this.suit + '/'+this.suit+'-'+ rankName+'.svg';    
+        this.imgLink = "./css/img/" + this.suit + "/"+this.suit+"-"+ rankName+".svg";    
     }
 }
 function makeDeck(){
@@ -172,14 +171,13 @@ function addWaste(e) {
             waste = waste.concat(stock.splice(stock.length-3).reverse());
         }
     }
-    console.log(!stock.length)
     displayActive(e);
     render();
 }
 function selectTableau(e) {
     if (!activeCard.length){
         var inArr = e.target.parentNode.className;
-        if (inArr === 'tableau'){
+        if (inArr === "tableau"){
             var tColumn = e.target.id.charAt(0);
             var tRow = e.target.id.substring(1);
             var canSelect = tableau[tColumn][tRow];
@@ -200,37 +198,36 @@ function selectWaste(e){
     render();
 }
 function chkWin() {
-    if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52) tableauEl.textContent = 'Congratulations!';
+    if (foundation[0].length + foundation[1].length + foundation[2].length + foundation[3].length === 52) tableauEl.textContent = "Congratulations!";
 }
-init();
 function displayActive(e) {
-    var gameBoard = document.getElementById('active-cards');
-    while(gameBoard.firstChild){
-            gameBoard.removeChild(gameBoard.firstChild);
+    var activeCardDom = document.getElementById("active-cards");
+    while(activeCardDom.firstChild){
+        activeCardDom.removeChild(activeCardDom.firstChild);
     }
     if(activeCard.length) {
         var shiftX = e.target.clientX - e.target.getBoundingClientRect().left;
         var shiftY = e.target.clientY - e.target.getBoundingClientRect().top;
-        document.getElementById('active-cards').style.position = 'absolute';
-        document.getElementById('active-cards').style.zIndex = 1000;
+        document.getElementById("active-cards").style.position = "absolute";
+        document.getElementById("active-cards").style.zIndex = 1000;
         if(e.target.id.substring(1) === e.path[1].lastChild.id.substring(1)) {
-            document.getElementById('active-cards').appendChild(e.target);
+            document.getElementById("active-cards").appendChild(e.target);
         }else{
             for(child in e.path[1].children){
                 if(e.path[1].childNodes[e.target.id.substring(1)]) {
-                    console.log(e.path[1].childNodes[e.target.id.substring(1)]);
-                    document.getElementById('active-cards').appendChild(e.path[1].childNodes[e.target.id.substring(1)]);
-                };
-            };
+                    document.getElementById("active-cards").appendChild(e.path[1].childNodes[e.target.id.substring(1)]);
+                }
+            }
         }    
         moveAt(e.clientX, e.clientY);
         function moveAt(pageX, pageY) {
-            document.getElementById('active-cards').style.left = pageX + 'px';
-            document.getElementById('active-cards').style.top = pageY + 'px';
+            document.getElementById("active-cards").style.left = pageX + "px";
+            document.getElementById("active-cards").style.top = pageY + "px";
         }
         function onMouseMove(e) {
             moveAt(e.clientX, e.clientY);
         }
-        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener("mousemove", onMouseMove);
     }
 }
+init();
