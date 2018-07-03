@@ -303,5 +303,6 @@ function chkPlay() {
   }
   render();
   displayActive();
+  alert("that isn't how you play solitaire fam");
 }
 init();
